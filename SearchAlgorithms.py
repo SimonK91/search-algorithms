@@ -1,3 +1,5 @@
+from typing import Tuple, Optional, List, Dict, Set
+
 from Grid import Grid
 
 
@@ -7,13 +9,16 @@ def _h_cost(a, b):
     return dx + dy
 
 
-def BreadthFirst(grid: Grid):
+def breadth_first_search(grid: Grid):
     start = grid.get_start()
     goal = grid.get_goal()
-    open_set = [start]
-    route = {start: None}
-    closed_set = set()
-    path = []
+
+    open_set: List[Tuple[int, int]] = []
+    route: Dict[Tuple[int, int], Tuple[int, int]] = {start: None}
+    closed_set: Set[Tuple[int, int]] = set()
+    path: List[Tuple[int, int]] = []
+    open_set.append(start)
+
     while open_set:
         yield open_set, closed_set, path
         cell = open_set[0]
@@ -21,7 +26,6 @@ def BreadthFirst(grid: Grid):
         closed_set.add(cell)
 
         if cell == goal:
-            path = []
             while cell:
                 path.append(cell)
                 cell = route[cell]
@@ -39,15 +43,15 @@ def BreadthFirst(grid: Grid):
         yield open_set, closed_set, path
 
 
-def BestFirst(grid: Grid):
+def best_first_search(grid: Grid):
     start = grid.get_start()
     goal = grid.get_goal()
 
-    open_set = set()
+    open_set: Set[Tuple[int, int]] = set()
+    route: Dict[Tuple[int, int], Tuple[int, int]] = {start: None}
+    closed_set: Set[Tuple[int, int]] = set()
+    path: List[Tuple[int, int]] = []
     open_set.add(start)
-    route = {start: None}
-    closed_set = set()
-    path = []
 
     while open_set:
         yield open_set, closed_set, path
@@ -79,22 +83,22 @@ def BestFirst(grid: Grid):
         yield open_set, closed_set, path
 
 
-def AStar(grid: Grid):
+def a_star_search(grid: Grid):
     start = grid.get_start()
     goal = grid.get_goal()
 
-    open_set = set()
+    open_set: Set[Tuple[int, int]] = set()
+    route: Dict[Tuple[int, int], Tuple[int, int]] = {start: None}
+    costs: Dict[Tuple[int, int], int] = {start: 0}
+    closed_set: Set[Tuple[int, int]] = set()
+    path: List[Tuple[int, int]] = []
     open_set.add(start)
-    route = {start: None}
-    costs = {start: 0}
-    closed_set = set()
-    path = []
 
     while open_set:
         yield open_set, closed_set, path
 
-        cell = None
-        cost = None
+        cell: Optional[Tuple[int, int]] = None
+        cost: Optional[int] = None
         for obj in open_set:
             cand_cost = _h_cost(obj, goal) + costs[obj]
             if cost is None or cand_cost < cost:  # or (cand_cost == cost and costs[obj] > costs[cell]):
