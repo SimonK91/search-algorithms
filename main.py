@@ -5,6 +5,7 @@ from tkinter import filedialog as fd
 
 import pygame
 
+import MazeBuilder
 from App import App
 from Button import Button
 from Grid import Grid
@@ -19,7 +20,7 @@ start_color = (0, 0, 255)
 goal_color = (255, 0, 0)
 
 open_set_color = (255, 255, 0)
-closed_set_color = (200, 200, 200)
+closed_set_color = (255, 140, 70)
 path_color = (0, 255, 0)
 
 
@@ -55,6 +56,12 @@ def randomize(grid):
     for x, y, _, _, _ in grid:
         if random.random() < 0.25:
             grid.set_wall(x, y)
+
+
+def build_maze(grid):
+    grid.clear()
+    for wall in MazeBuilder.build_walls(grid.get_start(), grid.width, grid.height):
+        grid.set_wall(*wall)
 
 
 class State:
@@ -106,10 +113,12 @@ def main():
                         on_click=lambda: state.add_steps(1)),
                  Button("+5", side_menu_offset[0] + 115, side_menu_offset[1] + 350, padding=5,
                         on_click=lambda: state.add_steps(5)),
-                 Button("Clear", side_menu_offset[0] + 40, side_menu_offset[1] + 300, padding=5,
+                 Button("Clear", side_menu_offset[0] + 5, side_menu_offset[1] + 300, padding=5,
                         on_click=grid.clear),
-                 Button("Randomize", side_menu_offset[0] + 100, side_menu_offset[1] + 300, padding=5,
+                 Button("Randomize", side_menu_offset[0] + 56, side_menu_offset[1] + 300, padding=5,
                         on_click=lambda: randomize(grid)),
+                 Button("Maze", side_menu_offset[0] + 145, side_menu_offset[1] + 300, padding=5,
+                        on_click=lambda: build_maze(grid)),
                  ]
 
     mouse_down = False
